@@ -3,7 +3,7 @@
 #' `create_date_table` create edge list date table in MySQL
 
 #' @details
-#' Default values for this table is: 
+#' Default values for this table are: 
 #' tableName = "EdgeList_date", targetName = "Target", dateName = "DatePMID"
 #' MySQL statment:
 #' CREATE TABLE Edgelist_date (
@@ -11,15 +11,13 @@
 #' DatePMID date,
 #' INDEX index_target(Target));
 #' 
-#' @param conMysql connection to mysql as defined in ~/.my.cnf
-#' @param tableName string with the name of the table used to store the dates for pmids
-#' @param targetName string with the name of the column used to store the Target of edge list
-#' @param dateName string with the name of the column used to store the date of edge list
+#' @param conMysql an RMariaDB connection
+#' @param tableName string with the name of the table used to store the last update dates for pmids
+#' @param targetName string with the name of the column used to store the Target PMID of the edge list
+#' @param dateName string with the name of the column used to store the date of the update
 #' @return create_date_table() always returns a scalar numeric that specifies the number of rows
 #'         affected by the statement. An error is raised when issuing a statement over a closed
-#'         or invalid connection, if the syntax of the statement is invalid, or if the statement is
-#'         not a non-NA string.
-
+#'         or invalid connection, if the syntax of the statement is invalid
 #' @export
 create_date_table <- function(conMysql, tableName = "EdgeList_date", targetName = "Target", dateName = "DatePMID"){
   # This will search if tableName exist in database
@@ -35,6 +33,6 @@ create_date_table <- function(conMysql, tableName = "EdgeList_date", targetName 
                   INDEX index_target(",targetName,"));")
     dbExecute(conMysql, qry)
   }else{
-    print("create_date_table: Date table is found.")
+    print("create_date_table: Date table already exists.")
   }
 }

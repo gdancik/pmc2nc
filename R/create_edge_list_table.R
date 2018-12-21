@@ -4,18 +4,18 @@
 
 #' @details
 #' Default values for this table is: 
-#' tableName = "EdgeList", sourceName = "SourcePMID", targetName = "Target"
+#' tableName = "EdgeList", sourceName = "Source", targetName = "Target"
 #' MySQL statment:
 #' CREATE TABLE Edgelist_date (
 #' SourcePMID INT,
 #' Target INT,
 #' INDEX index_target(Target));
 #' 
-#' @param con_mysql connection to mysql as defined in ~/.my.cnf
-#' @param tableName string with the name of the table used to store the edge list
-#' @param sourceName string with the name of the column used to store the source of edge list
-#' @param targetName string with the name of the column used to store the Target of edge list
-#' @return create_edge_list_table() always returns a scalar numeric that specifies the number of rows
+#' @param con_mysql a MySQL connection 
+#' @param tableName string with the name of the table used to store the edge list, defaulting to 'EdgeList'
+#' @param sourceName string with the name of the column used to store the source, defaulting to 'Source'
+#' @param targetName string with the name of the column used to store the target, defaulting to 'Target' 
+#' @return a scalar numeric that specifies the number of rows
 #'         affected by the statement. An error is raised when issuing a statement over a closed
 #'         or invalid connection, if the syntax of the statement is invalid, or if the statement is
 #'         not a non-NA string.

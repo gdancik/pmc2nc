@@ -5,35 +5,31 @@
 \title{Insert edge lists to mysql database.}
 \usage{
 insertEdgeList(conMysql, edgeList, tableName = "EdgeList",
-  sourceName = "Source", targetName = "Target",
   dateTableName = "EdgeList_date")
 }
 \arguments{
-\item{conMysql}{connection to mysql as defined in ~/.my.cnf}
+\item{conMysql}{a MySQL connection}
 
-\item{edgeList}{edgeList results, as obtained from `generateEdgeList` (see details)}
+\item{edgeList}{an edge list, as obtained from `generateEdgeList`}
 
-\item{tableName}{string with the name of the table used to store the edge list}
+\item{tableName}{string with the name of the table used to store the edge list, defaulting to 'EdgeList'}
 
-\item{sourceName}{string with the name of the column used to store the source of edge list}
-
-\item{targetName}{string with the name of the column used to store the Target of edge list}
-
-\item{dateTableName}{string with the name of the table used to store the dates for pmids}
+\item{dateTableName}{string with the name of the table used to store the dates for pmids, defaulting to 'EdgeList_date'}
 }
 \value{
-insertEdgeList() always returns a scalar numeric that specifies the number of rows
+a scalar numeric that specifies the number of rows
         affected by the statement. An error is raised when issuing a statement over a closed
-        or invalid connection, if the syntax of the statement is invalid, or if the statement is
-        not a non-NA string.
+        or invalid connection, if the syntax of the statement is invalid.
 }
 \description{
 `insertEdgeList` insert the edge list from the results of `generateEdgeList`
 }
 \details{
-`edgeList` must come from the result of generateEdgeList. The edge list will be stored in to
-table called Edgelist by default. This table have SourcePMID and Target column. It will also store
-the date when the target PMID was inserted to the database in a table called EdgeList_date.
+`edgeList` must come from the result of generateEdgeList. The edge list will be stored in the
+specified table, which must include column names 'Source' and 'Target'. The table will be
+created if it does not exist. Edges in the table with matching targets are  first 
+deleted. The assumption is that the 'edgeList' is a complete up-to-date edge list, and
+previous records are removed.
 }
 \examples{
 
@@ -43,11 +39,5 @@ e2 <- generateEdgeList(res1)
 insertEdgeList(conMysql, e2)
 }
 \seealso{
-\code{\link{get_pmc_cited_in}} for obtaining edgeList citation results
-
 \code{\link{generateEdgeList}} for obtaining edgeList citation results
-
-\code{\link{create_edge_list_table}} for edge list table structure
-
-\code{\link{create_date_table}} for edge list date table structure
 }

@@ -1,6 +1,6 @@
 #' Combine 2 edge lists together
 #'
-#' `edgelist_1` and `edgelist_2` must come from the result of `generateEdgeList` or `get_edge_list_db`
+#' Combines 2 edge lists obtained from `generateEdgeList` and/or `get_edge_list_db`
 
 #' @details
 #' `edgelist_1` and `edgelist_2` must come from the result of `generateEdgeList` or `get_edge_list_db`.
@@ -23,7 +23,7 @@ combineEdgeList <- function(edgelist_1, edgelist_2){
     print("Both edge list is empty. Returning NULL")
     res <- NULL
   }else{
-    print("Combining two edge list now.")
+    print("Combining two edge lists.")
     res <- rbind(edgelist_1, edgelist_2)
   }
 }

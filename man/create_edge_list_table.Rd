@@ -8,16 +8,16 @@ create_edge_list_table(con_mysql, tableName = "EdgeList",
   sourceName = "Source", targetName = "Target")
 }
 \arguments{
-\item{con_mysql}{connection to mysql as defined in ~/.my.cnf}
+\item{con_mysql}{a MySQL connection}
 
-\item{tableName}{string with the name of the table used to store the edge list}
+\item{tableName}{string with the name of the table used to store the edge list, defaulting to 'EdgeList'}
 
-\item{sourceName}{string with the name of the column used to store the source of edge list}
+\item{sourceName}{string with the name of the column used to store the source, defaulting to 'Source'}
 
-\item{targetName}{string with the name of the column used to store the Target of edge list}
+\item{targetName}{string with the name of the column used to store the target, defaulting to 'Target'}
 }
 \value{
-create_edge_list_table() always returns a scalar numeric that specifies the number of rows
+a scalar numeric that specifies the number of rows
         affected by the statement. An error is raised when issuing a statement over a closed
         or invalid connection, if the syntax of the statement is invalid, or if the statement is
         not a non-NA string.
@@ -27,7 +27,7 @@ create_edge_list_table() always returns a scalar numeric that specifies the numb
 }
 \details{
 Default values for this table is: 
-tableName = "EdgeList", sourceName = "SourcePMID", targetName = "Target"
+tableName = "EdgeList", sourceName = "Source", targetName = "Target"
 MySQL statment:
 CREATE TABLE Edgelist_date (
 SourcePMID INT,

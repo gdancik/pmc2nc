@@ -10,22 +10,23 @@ isDate(mydate)
 \item{mydate}{string to be formated.}
 }
 \value{
-isDate() returns date in the format of YYYY-MM-DD. Returns NA if it fails to format.
+isDate() returns the date in the format of YYYY-MM-DD.
 }
 \description{
-`isDate` will try to format the input into a format recognizable to MySQL. If the formating fails, it will return NA
+`isDate` will try to format an input date into a format recognizable by MySQL, i.e., YYYY-MM-DD.
 }
 \details{
-`isDate` will try to format the input in YYYY-MM-DD and it will return NA if it cannot format the input.
+`isDate` will format the input as YYYY-MM-DD and will generate an error if the date cannot be formatted.
+ The year should be specified as YYYY and must be >= 1900.
 }
 \examples{
 
 # This will print 2001-01-09"
 date <- "2001-1-9"
-<- isDate(date)
+isDate(2001-1-9)
 
-# This will return NA
+# This will give an error
 date <- "209-01-9999"
-res <- isDate(date)
+isDate("209-01-9999")
 
 }

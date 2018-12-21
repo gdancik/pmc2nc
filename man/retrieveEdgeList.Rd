@@ -10,37 +10,31 @@ retrieveEdgeList(pmids, batchSize = 200, conMysql = NULL,
 \arguments{
 \item{pmids}{a vector of PMIDs look-up.}
 
-\item{batchSize}{the batch size to use.}
+\item{batchSize}{the batch size to use for NCBI look-ups.}
 
-\item{conMysql}{connection to mysql as defined in `~/.my.cnf`.}
+\item{conMysql}{a MySQL connection}
 
-\item{lastUpdate}{string of a date used to find old PMIDs stored in database in YYYY-MM-DD format.}
+\item{lastUpdate}{date string, in YYYY-MM-DD format, to use a threshold for updating target PMIDs in the database}
 }
 \value{
-An edge list (data.frame) with one column for Target PMIDS and one column for source PMIDS.
+An edge list (data.frame) with one column for Target PMIDS and one column for Source PMIDS.
 }
 \description{
-`retrieveEdgeList` Retrieve an edge list from the provided PMIDs
+`retrieveEdgeList` Retrieves a citation network edge list for a set of PMIDs
 }
 \details{
-Code overview.
+This function works as follows:
 
-1. Check if there is a MariaDBConnection, if not, just get everything from NCBI
+1. If a MySQL connection is not specified, retreive citation information from NCBI.
 
-2. If there is a MariaDBConnection, check for tables in DB and create them if they dont exist.
-
-3. Check if lastUpdate = NULL, if lastUpdate is NULL, run retrieveEdgeList1.
-
-retrieveEdgeList1 - 1. query table edge list date for PMID in database 
-2. split the pmids list into pmids_in_db and pmids_not_in_db
-3. pmids_not_in_db search in NCBI and pmids_in_db search in DB
-4. insert edgelist of pmids_not_in_db into database
-                          
-4. If lastUpdate != NULL, check which PMIDs are out of date. If no PMIDs are out of date, run retrieveEdgeList1.
-
-5. If there are out of date PMIDs, get list of pmids_in_db and seperate the list between pmids do and not need update
-   Get a list of pmids that need to search NCBI if needed. Combine edge list from NCBI and pmids that need update. Then
-   insert this conbinded edge list to database. Query database with the list of pmids that do not need update.
+2. If a MySQL connection is specified and 'lastUpdate' is not NULL, then get the edge 
+   list from the database, for targets that have been updated after 'lastUpdate'. 
+   If 'lastUpdate' is NULL, then all target PMIDS in the database are used. For
+   other target PMIDs, get citation information from NCBI.
+   
+If a MySQL connection is specified, the updated edge list and target PMIDs are stored
+in the database. Note that if a target PMID is updated, previous records with that
+target PMID are deleted from the database.
 }
 \examples{
 pmid <- 21876761
@@ -54,22 +48,8 @@ res1 <- retrieveEdgeList(pmid, conMysql = con_mysql)
 # res2 == res1
 res2 <- retrieveEdgeList(pmid, conMysql = con_mysql)
 
-# This will not create new table. This will insert 29463753, 21876726
-# This will qry db for 21876761
-# result will be like res1 with the combine 29463753, 21876726 edge list
-res3 <- retrieveEdgeList(pmids1, conMysql = con_mysql)
-
-# This will insert Source with PMID 1000001 This will use to test lastUpdate
-# insertEdgeList will delete everything with "Target" = 21876761 and insert e1
-e1 <- data.frame("Source" = 1000001, "Target" = 21876761 )
-insertEdgeList(con_mysql, e1)
-
-# This should only return one edge list (1000001, 21876761)
-res4 <- retrieveEdgeList(pmid, conMysql = con_mysql)
-
 }
 \seealso{
-\code{\link{get_pmc_cited_in}} for obtaining edge_list citation results
-
-\code{\link{generateEdgeList}} for obtaining edge_list citation results
+\code{\link{get_pmc_cited_in}} and \code{\link{generateEdgeList}} for 
+obtaining edge_list citation results from NCBI
 }
