@@ -4,10 +4,14 @@
 \alias{get_article_info}
 \title{Get article information}
 \usage{
-get_article_info(pmids)
+get_article_info(pmids, elements = NULL, show_progress = TRUE)
 }
 \arguments{
 \item{pmids}{a vector of PMIDs look-up}
+
+\item{elements}{a vector indicating the article info to retrieve, defaulting to c("uid", "title", "lastauthor", "fulljournalname")}
+
+\item{show_progress}{outputs progress if TRUE}
 }
 \value{
 a data.frame containing article information for each PMID
@@ -21,10 +25,8 @@ Returns summary information for a list of articlees
 This function is a wrapper for the `entrez_summary` and 
 'extract_from_esummary' functions from `rentrez`. 
 Function is currently limited to handling no more than 5000 PMIDs. 
-The "web history" feature is used to store IDs on the 
-server, and summary information is retrieved 500 IDs at a time.
-Currently the 'uid', 'title', 'lastauthor', and 'fulljournalname'
-for each PMID is obtained.
+The "web history" feature is used to post IDs to the 
+server, 200 at a time, and retreive information 10 IDs at a time.
 }
 \examples{
 res <- get_article_info(c(21876726,21876761))

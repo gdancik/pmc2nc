@@ -8,45 +8,61 @@
 #' This function is a wrapper for the `entrez_summary` and 
 #' 'extract_from_esummary' functions from `rentrez`. 
 #' Function is currently limited to handling no more than 5000 PMIDs. 
-#' The "web history" feature is used to store IDs on the 
-#' server, and summary information is retrieved 500 IDs at a time.
-#' Currently the 'uid', 'title', 'lastauthor', and 'fulljournalname'
-#' for each PMID is obtained.
+#' The "web history" feature is used to post IDs to the 
+#' server, 200 at a time, and retreive information 10 IDs at a time.
 #' 
 #' @param pmids a vector of PMIDs look-up 
+#' @param elements a vector indicating the article info to retrieve, defaulting to c("uid", "title", "lastauthor", "fulljournalname")
+#' @param show_progress outputs progress if TRUE
 #' @return a data.frame containing article information for each PMID
 #'
 #' @examples
 #' res <- get_article_info(c(21876726,21876761))
 
 #' @export
-get_article_info <-function(pmids) {
-  
-  elements <- c("uid", "title", "lastauthor", "fulljournalname")
+get_article_info <-function(pmids, elements = NULL, show_progress = TRUE) {
+  if (is.null(elements)) {
+      elements <- c("uid", "title", "lastauthor", "fulljournalname")
+  }
   pmids <- unique(pmids)
   if (length(pmids) > 5000) {
     stop("can only process up to 5000 unique pmids for now")
   }
-  
-  wait <- 0.34 # no more than 3 requests per second
+  wait <- 0.34
   if (Sys.getenv("ENTREZ_KEY") != "") {
-    wait <- 0.11 # no more than 10 requests per second
+    print("using ENTREZ_KEY")
+    wait <- 0.11
   }
-  
   res <- NULL
-  upload <- entrez_post(db="pubmed", id=pmids)
-
-  retmax <- 500 # get 500 at a time
-  pb <- progress_bar$new(total = ceiling(length(pmids) / retmax))
   
-  for (start in seq(0, length(pmids),by = retmax)) {
-    e <- entrez_summary(db = "pubmed", web_history = upload, retstart = start, retmax = retmax, always_return_list = TRUE)
-    pb$tick()
-    r <- extract_from_esummary(e, elements, FALSE)
-    res <- rbind(res, do.call(rbind.data.frame, r))
-    Sys.sleep(wait)
+  start <- 1
+  n <- length(pmids)
+  upload <- NULL
+  batchSize <- 200
+  retmax <- 10
+  
+  # post batchSize then get retmax at a time
+  batchNum = 1
+  while (start <= n) {
+    end <- min(start+batchSize-1, n)
+    upload <- entrez_post(db = "pubmed", id = pmids[start:end])
+    batchSize <- end - start + 1
+    start <- end + 1
+    if (show_progress) {
+        cat("Getting article info for batch #", batchNum, "\n")
+        pb <- progress_bar$new(total = ceiling(batchSize/retmax))
+        batchNum <- batchNum + 1
+    }
+    for (st in seq(0, batchSize-1, by = retmax)) {
+      e <- entrez_summary(db = "pubmed", web_history = upload, 
+                          retstart = st, retmax = retmax, always_return_list = TRUE)
+      if (show_progress) pb$tick()
+      r <- extract_from_esummary(e, elements, FALSE)
+      res <- rbind(res, do.call(rbind.data.frame, r))
+      Sys.sleep(wait)
+    }
+    
   }
-
   return(res)
-} 
-  
+}
+
