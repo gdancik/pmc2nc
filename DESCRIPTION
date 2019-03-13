@@ -10,6 +10,6 @@ License: GPL (>= 2)
 LazyData: true
 Depends:
     rentrez,
-    progress
+    progress,
     dplyr
 RoxygenNote: 6.1.1
