@@ -11,4 +11,5 @@ LazyData: true
 Depends:
     rentrez,
     progress
+    dplyr
 RoxygenNote: 6.1.1
