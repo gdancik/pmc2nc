@@ -32,11 +32,12 @@ deleted. The assumption is that the 'edgeList' is a complete up-to-date edge lis
 previous records are removed.
 }
 \examples{
-
+\dontrun{
 # generate an edge list for a single article and then insert the data to the table called "edgelist"
 res1 <- get_pmc_cited_in(21876761)
 e2 <- generateEdgeList(res1)
 insertEdgeList(conMysql, e2)
+}
 }
 \seealso{
 \code{\link{generateEdgeList}} for obtaining edgeList citation results

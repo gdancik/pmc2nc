@@ -19,6 +19,12 @@
 
 #' @export
 getCitationCounts <- function(e) {
-  require(dplyr)
-  group_by(e, Target) %>% count()
+
+  if (!requireNamespace("dplyr", quietly = TRUE)) {
+    stop("Package \"dplyr\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
+
+
+dplyr::count(  dplyr::group_by(e, Target)  )
 }

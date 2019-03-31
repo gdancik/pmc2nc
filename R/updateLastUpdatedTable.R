@@ -16,7 +16,12 @@
 #'
 #' @export
 updateLastUpdatedTable <- function(conMysql, targetIDs, tableName = "EdgeList_date"){
-  
+
+ if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+    stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
+
   # create table if it does not exist
   create_date_table(conMysql, tableName, targetName)
   
@@ -25,7 +30,7 @@ updateLastUpdatedTable <- function(conMysql, targetIDs, tableName = "EdgeList_da
   # delete old dates so there are no duplicates
   x <- paste0(targetIDs, collapse = ",")
   delete_paste <- paste0("DELETE FROM ",tableName," where Target in (",x,");")
-  dbExecute(conMysql, delete_paste)
+  RMariaDB::dbExecute(conMysql, delete_paste)
   
   # concatenate the two columns of edgeList so I can insert the whole thing in one insert statement
   date_paste <- paste0("(" , targetIDs , ",\'" , Sys.Date(), "\')", collapse = ",")
@@ -34,6 +39,6 @@ updateLastUpdatedTable <- function(conMysql, targetIDs, tableName = "EdgeList_da
   qry <- paste0("INSERT INTO ",tableName," Values ",date_paste,";")
 
   # execute the insert statement
-  dbExecute(conMysql, qry)
+  RMariaDB::dbExecute(conMysql, qry)
 }
 

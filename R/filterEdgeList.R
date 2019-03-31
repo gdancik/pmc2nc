@@ -7,7 +7,7 @@
 #' target IDs with at least 'count' citations
 #' 
 #' @param e an edge list, as obtained from `generateEdgeList`
-#' @param a count threshold value for citation counts
+#' @param count a threshold value for citation counts
 #' @return A list with the following objects:
 #'         edgeList - the filtered edge list
 #'         counts - a tibble with one column for target PMIDS and one column, 'n', containing the corresponding frequency of citations
@@ -25,7 +25,7 @@
 filterEdgeList <- function(e, count) {
   counts <- getCitationCounts(e)
   target <- counts$Target[counts$n>=count] 
-  e <- filter(e, Target %in% target)
+  e <- dplyr::filter(e, Target %in% target)
   
   list(edgeList = e, counts = counts)
   

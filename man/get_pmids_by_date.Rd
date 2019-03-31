@@ -15,8 +15,6 @@ get_pmids_by_date(conMysql, pmids, lastUpdate,
 \item{lastUpdate}{string of the date used for comparison, in YYYY-MM-DD format}
 
 \item{tableName}{string with the name of the table that stores the target pmids and dates.}
-
-\item{mysqlOperator}{string for comparison operators '= , >, >=, <, <=', defaulting to ">"}
 }
 \value{
 a data.frame with one column for Target and one column for lastUpdated

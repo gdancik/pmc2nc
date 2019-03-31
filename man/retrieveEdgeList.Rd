@@ -37,17 +37,19 @@ in the database. Note that if a target PMID is updated, previous records with th
 target PMID are deleted from the database.
 }
 \examples{
+\dontrun{
 pmid <- 21876761
 pmids1 <- c(21876761, 311, 29463753, 21876726)
 
-# This will create tables and insert edge list from one pmid "21876761"
+# This will create tables and insert edge list from one pmid "21876761",
+# for a valid con_mysql
 # This gets everything from NCBI if there is no database
 res1 <- retrieveEdgeList(pmid, conMysql = con_mysql)
 
 # This will not create new tables or insert edge list. This will just take everything from DB.
 # res2 == res1
 res2 <- retrieveEdgeList(pmid, conMysql = con_mysql)
-
+}
 }
 \seealso{
 \code{\link{get_pmc_cited_in}} and \code{\link{generateEdgeList}} for 

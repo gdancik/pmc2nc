@@ -11,14 +11,17 @@
 #' @param pmids a vector of pmids to look up
 #' @param lastUpdate string of the date used for comparison, in YYYY-MM-DD format
 #' @param tableName string with the name of the table that stores the target pmids and dates.
-#' @param mysqlOperator string for comparison operators '= , >, >=, <, <=', defaulting to ">" 
 #' @return a data.frame with one column for Target and one column for lastUpdated
 #' 
 #' @examples
 #' 
 #' @export
 get_pmids_by_date <- function(conMysql, pmids, lastUpdate, tableName = "Edgelist_date"){
-  
+ if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+    stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
+
   # format PMIDS
   x <- paste0(pmids, collapse = ",")
   
@@ -31,5 +34,5 @@ get_pmids_by_date <- function(conMysql, pmids, lastUpdate, tableName = "Edgelist
     qry <-paste0(qry," AND lastUpdated >= '",lastUpdate,"';")
   }
   print("get_pmids_by_date: Querying now.")
-  dbGetQuery(conMysql, qry)
+  RMariaDB::dbGetQuery(conMysql, qry)
 }

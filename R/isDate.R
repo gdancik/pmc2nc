@@ -11,13 +11,12 @@
 #' @examples
 #' 
 #' # This will print 2001-01-09"
-#' date <- "2001-1-9"
-#' isDate(2001-1-9)
+#' isDate("2001-1-9")
 #'
+#' \dontrun{
 #' # This will give an error
-#' date <- "209-01-9999"
 #' isDate("209-01-9999")
-#' 
+#' }
 
 #' @export
 isDate <- function(mydate) {

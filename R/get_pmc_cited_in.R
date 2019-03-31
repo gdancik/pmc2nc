@@ -37,7 +37,7 @@ function(pmids, batchSize = 200) {
     if (n == 1) {
         by_id <- FALSE
     }
-    res <- entrez_link(dbfrom = "pubmed",  id = pmids, linkname = "pubmed_pubmed_citedin", by_id = by_id)
+    res <- rentrez::entrez_link(dbfrom = "pubmed",  id = pmids, linkname = "pubmed_pubmed_citedin", by_id = by_id)
     
     if (n == 1) {
       res <- list(res)
@@ -60,7 +60,7 @@ function(pmids, batchSize = 200) {
   beg <- 1
   end <- min(batchSize, n)
   
-  pb <- progress_bar$new(total = num_batches)
+  pb <- progress::progress_bar$new(total = num_batches)
   
   for (i in 1:num_batches) {
     currIDs <- pmids[beg:end]
@@ -71,7 +71,7 @@ function(pmids, batchSize = 200) {
         by_id <- FALSE
     }
 
-    res[[i]] <- entrez_link(dbfrom = "pubmed",  id = currIDs, linkname = "pubmed_pubmed_citedin", by_id = by_id)
+    res[[i]] <- rentrez::entrez_link(dbfrom = "pubmed",  id = currIDs, linkname = "pubmed_pubmed_citedin", by_id = by_id)
     
     if (!by_id) {
         res[[i]] <- list(res[[i]])

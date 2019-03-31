@@ -45,19 +45,19 @@ get_article_info <-function(pmids, elements = NULL, show_progress = TRUE) {
   batchNum = 1
   while (start <= n) {
     end <- min(start+batchSize-1, n)
-    upload <- entrez_post(db = "pubmed", id = pmids[start:end])
+    upload <- rentrez::entrez_post(db = "pubmed", id = pmids[start:end])
     batchSize <- end - start + 1
     start <- end + 1
     if (show_progress) {
         cat("Getting article info for batch #", batchNum, "\n")
-        pb <- progress_bar$new(total = ceiling(batchSize/retmax))
+        pb <- progress::progress_bar$new(total = ceiling(batchSize/retmax))
         batchNum <- batchNum + 1
     }
     for (st in seq(0, batchSize-1, by = retmax)) {
-      e <- entrez_summary(db = "pubmed", web_history = upload, 
+      e <- rentrez::entrez_summary(db = "pubmed", web_history = upload, 
                           retstart = st, retmax = retmax, always_return_list = TRUE)
       if (show_progress) pb$tick()
-      r <- extract_from_esummary(e, elements, FALSE)
+      r <- rentrez::extract_from_esummary(e, elements, FALSE)
       res <- rbind(res, do.call(rbind.data.frame, r))
       Sys.sleep(wait)
     }

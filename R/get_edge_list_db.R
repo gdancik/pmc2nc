@@ -14,16 +14,22 @@
 #' @seealso \code{\link{create_edge_list_table}} for edge list table structure
 #' 
 #' @examples
+#' \dontrun{
 #' # This will look for PMIDs in 'x' from the DB and get the Source and Target
 #' x <- c(21876761, 311, 29463753, 21876726)
 #' res <- get_edge_list_db(conMysql, x)
+#' }
 
 
 get_edge_list_db <- 
   function(conMysql, pmids, tableName = "EdgeList"){
+   if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+     stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+       call. = FALSE)
+   }
     # This will search if tableName exist in database
     qry <- paste0("show tables like '",tableName,"';")
-    res <- dbGetQuery(conMysql, qry)
+    res <- RMariaDB::dbGetQuery(conMysql, qry)
     
     # If the tableexists, check if pmids argument actually have values.
     if (length(res[[1]]) == 1){
@@ -37,7 +43,7 @@ get_edge_list_db <-
         
         # SELECT * FROM edgelist WHERE Target in (21876761, 311, 29463753, 21876726)
         qry <- paste0("SELECT * FROM ",tableName," WHERE Target in (",pmids,");")
-        res <- dbGetQuery(conMysql, qry)
+        res <- RMariaDB::dbGetQuery(conMysql, qry)
       }else{
         stop("PMID input is empty. Cannot search database.")
       }

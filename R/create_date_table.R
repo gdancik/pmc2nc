@@ -20,9 +20,13 @@
 #'         or invalid connection, if the syntax of the statement is invalid
 #' @export
 create_date_table <- function(conMysql, tableName = "EdgeList_date", targetName = "Target", dateName = "DatePMID"){
+  if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+    stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
   # This will search if tableName exist in database
   qry <- paste0("show tables like '",tableName,"';")
-  res <- dbGetQuery(conMysql, qry)
+  res <- RMariaDB::dbGetQuery(conMysql, qry)
   
   # Create the table if it is not found by checking length of res
   if (length(res[[1]]) == 0){
@@ -31,7 +35,7 @@ create_date_table <- function(conMysql, tableName = "EdgeList_date", targetName 
                   ",targetName," INT,
                   ",dateName," date,
                   INDEX index_target(",targetName,"));")
-    dbExecute(conMysql, qry)
+    RMariaDB::dbExecute(conMysql, qry)
   }else{
     print("create_date_table: Date table already exists.")
   }

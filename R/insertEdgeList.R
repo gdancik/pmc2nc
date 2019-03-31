@@ -19,18 +19,23 @@
 #' @seealso \code{\link{generateEdgeList}} for obtaining edgeList citation results
 #'
 #' @examples
-#'
+#' \dontrun{
 #' # generate an edge list for a single article and then insert the data to the table called "edgelist"
 #' res1 <- get_pmc_cited_in(21876761)
 #' e2 <- generateEdgeList(res1)
 #' insertEdgeList(conMysql, e2)
-
+#' }
 
 #' @export
 
 insertEdgeList <-
   function(conMysql, edgeList, tableName = "EdgeList", dateTableName = "EdgeList_date"){
-    if (length(edgeList) != 0){
+ if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+    stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
+  
+      if (length(edgeList) != 0){
       print("insertEdgeList: Inserting edge list into database now.")
       
       # To avoid hitting any memory limits, only process 1 million rows at a time
@@ -60,7 +65,7 @@ insertEdgeList1 <- function(conMysql, edgeList, tableName){
   target_delete <- unique(edgeList$Target)
   x <- paste0(target_delete, collapse = ",")
   delete_paste <- paste0("DELETE FROM ",tableName," where Target in (",x,");")
-  dbExecute(conMysql, delete_paste)
+  RMariaDB::dbExecute(conMysql, delete_paste)
   
   # concatenate the two columns of edgeList so I can insert the whole thing in one insert statement
   edge_list_paste <- paste0("(" , edgeList$Source , "," , edgeList$Target, ")", collapse = ",")
@@ -69,7 +74,7 @@ insertEdgeList1 <- function(conMysql, edgeList, tableName){
   qry <- paste0("INSERT INTO ",tableName," Values ",edge_list_paste,";")
 
   # execute the insert statement
-  dbExecute(conMysql, qry)
+  RMariaDB::dbExecute(conMysql, qry)
 }
 
 

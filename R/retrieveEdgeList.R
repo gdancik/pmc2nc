@@ -28,17 +28,19 @@
 #' obtaining edge_list citation results from NCBI
 #'
 #' @examples
+#' \dontrun{
 #' pmid <- 21876761
 #' pmids1 <- c(21876761, 311, 29463753, 21876726)
 #' 
-#' # This will create tables and insert edge list from one pmid "21876761"
+#' # This will create tables and insert edge list from one pmid "21876761",
+#' # for a valid con_mysql
 #' # This gets everything from NCBI if there is no database
 #' res1 <- retrieveEdgeList(pmid, conMysql = con_mysql)
 #' 
 #' # This will not create new tables or insert edge list. This will just take everything from DB.
 #' # res2 == res1
 #' res2 <- retrieveEdgeList(pmid, conMysql = con_mysql)
-#'
+#' }
 #' @export
 
 retrieveEdgeList <- function(pmids, batchSize = 200, conMysql = NULL, lastUpdate = NULL){
@@ -47,7 +49,13 @@ retrieveEdgeList <- function(pmids, batchSize = 200, conMysql = NULL, lastUpdate
     e2 <- NULL
     
     if(!is.null(conMysql)){
-    
+
+
+      if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+            stop("Package \"RMariaDB\" needed for this function to work with 'conMySql' argument.  Please install it.",
+            call. = FALSE)
+      }
+
       # create date table if it does not exist 
       create_date_table(conMysql)
       create_edge_list_table(conMysql)

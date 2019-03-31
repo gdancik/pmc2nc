@@ -25,9 +25,14 @@
 
 #' @export
 create_edge_list_table <- function(con_mysql, tableName = "EdgeList", sourceName = "Source", targetName = "Target"){
-  # This will search if tableName exist in database
+
+   if (!requireNamespace("RMariaDB", quietly = TRUE)) {
+    stop("Package \"RMariaDB\" needed for this function to work. Please install it.",
+      call. = FALSE)
+  }
+    # This will search if tableName exist in database
   qry <- paste0("show tables like '",tableName,"';")
-  res <- dbGetQuery(con_mysql, qry)
+  res <- RMariaDB::dbGetQuery(con_mysql, qry)
   
   # Create the table if it is not found by checking length of res
   if (length(res[[1]]) == 0){
@@ -36,7 +41,7 @@ create_edge_list_table <- function(con_mysql, tableName = "EdgeList", sourceName
                   ",sourceName," INT,
                   ",targetName," INT,
                   INDEX index_target(",targetName,"));")
-    dbExecute(con_mysql, qry)
+    RMariaDB::dbExecute(con_mysql, qry)
   }else{
     print("create_edge_list_table: Table is found.")
   }

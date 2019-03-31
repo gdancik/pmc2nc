@@ -24,9 +24,11 @@ retrieves an edge list from the database with the provided list of target PMIDs.
 An error is generated if the table does not exist in the database.
 }
 \examples{
+\dontrun{
 # This will look for PMIDs in 'x' from the DB and get the Source and Target
 x <- c(21876761, 311, 29463753, 21876726)
 res <- get_edge_list_db(conMysql, x)
+}
 }
 \seealso{
 \code{\link{create_edge_list_table}} for edge list table structure
