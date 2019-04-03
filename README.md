@@ -1,8 +1,6 @@
 ## Overview
 
-The _R_ package _pmc2nc_ is a **P**ub**M**ed **C**entral **c**itation **n**etwork **c**onstruction tool for facilitating citation network analyses for articles in PMC.  _pmc2nc_
-
-[Eastern Colleges Science Conference Abstract](http://www.ecsc1.org/2019.html)
+The _R_ package _pmc2nc_ is a **P**ub**M**ed **C**entral **c**itation **n**etwork **c**onstruction tool for facilitating citation network analyses for articles in PMC. [[Eastern Colleges Science Conference Abstract](http://www.ecsc1.org/2019.html)]
 
 
 **DEVELOPMENT OF A PUBMED CENTRAL CITATION COLLECTION TOOL AND NETWORK ANALYSIS OF CANCER-RELATED GENES**
@@ -43,6 +41,6 @@ A shiny web application, the _shiny citation collection tool (shinycct)_ is avai
 1. Download docker from [https://www.docker.com/get-started](https://www.docker.com/get-started)
 2. Run the application by typing the following at your docker command prompt:
 ```
-docker run -it -p 3838:3838 gdancik/shinyctt
+docker run -it -p 3838:3838 gdancik/shinycct
 ```
 3. Point your browser to localhost:3838
